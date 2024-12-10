@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MyFirstApp.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<form method="get">
+    <div class="form-group">
+        <label for="searchString">Search</label>
+        <input type="text" name="searchString" id="searchString" class="form-control" value="@Context.Request.Query["searchString"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="minPrice">Min Price</label>
+        <input type="number" name="minPrice" id="minPrice" class="form-control" value="@Context.Request.Query["minPrice"]" />
+    </div>
+
+    <div class="form-group">
+        <label for="maxPrice">Max Price</label>
+        <input type="number" name="maxPrice" id="maxPrice" class="form-control" value="@Context.Request.Query["maxPrice"]" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>

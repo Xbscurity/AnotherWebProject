@@ -1,0 +1,18 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>My First App</title>
+</head>
+<body>
+    <h1>Welcome to ASP.NET Core MVC!</h1>
+    <p>This is the home page of your ASP.NET Core MVC application.</p>
+
+    <h2>Products</h2>
+    <ul>
+        @foreach (var product in Model)
+        {
+            <li>@product.Name - $@product.Price</li>
+        }
+    </ul>
+</body>
+</html>

@@ -5,17 +5,19 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "consoleCall", "consoleCall\consoleCall.csproj", "{AF93F450-BB1B-41B9-8A7F-7DD12B4CDCDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "secondTask", "secondTask\secondTask.csproj", "{CCC1DA5A-CD1D-4C3C-821A-F952E065391A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "secondTask", "secondTask\secondTask.csproj", "{CCC1DA5A-CD1D-4C3C-821A-F952E065391A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task3", "Task3\Task3.csproj", "{3FECA9D3-86BD-4710-9F73-A796F6A13287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task3", "Task3\Task3.csproj", "{3FECA9D3-86BD-4710-9F73-A796F6A13287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task4", "Task4\Task4.csproj", "{6912AAB1-3BF2-4B3D-BD75-4AD08E7237A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task4", "Task4\Task4.csproj", "{6912AAB1-3BF2-4B3D-BD75-4AD08E7237A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task5", "Task5\Task5.csproj", "{91D945F7-32F7-4F6B-9FAE-59BDF36DCDAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task5", "Task5\Task5.csproj", "{91D945F7-32F7-4F6B-9FAE-59BDF36DCDAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Task6", "Task6\Task6.csproj", "{C583FE1F-E093-4672-B2B5-17E08FD42273}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Task6", "Task6\Task6.csproj", "{C583FE1F-E093-4672-B2B5-17E08FD42273}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFirstWebApp", "MyFirstWebApp\MyFirstWebApp.csproj", "{C240EB9C-CC27-4C21-A22B-F3AB1AD82F86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyFirstWebApp", "MyFirstWebApp\MyFirstWebApp.csproj", "{C240EB9C-CC27-4C21-A22B-F3AB1AD82F86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSending", "EmailSending\EmailSending.csproj", "{2754B0E1-C3BD-4275-9B0C-69FBB3574447}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{C240EB9C-CC27-4C21-A22B-F3AB1AD82F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C240EB9C-CC27-4C21-A22B-F3AB1AD82F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C240EB9C-CC27-4C21-A22B-F3AB1AD82F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2754B0E1-C3BD-4275-9B0C-69FBB3574447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2754B0E1-C3BD-4275-9B0C-69FBB3574447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2754B0E1-C3BD-4275-9B0C-69FBB3574447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2754B0E1-C3BD-4275-9B0C-69FBB3574447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -58,12 +58,12 @@ namespace MyFirstWebApp.Seeds
             }
 
             // Создание нескольких категорий
-            var categories = new ProductCategory[]
+            var categories = new Category[]
             {
-            new ProductCategory { Name = "Electronics" },
-            new ProductCategory { Name = "Clothing" },
-            new ProductCategory { Name = "Food" },
-            new ProductCategory { Name = "Books" }
+            new Category { Name = "Electronics" },
+            new Category { Name = "Clothing" },
+            new Category { Name = "Food" },
+            new Category { Name = "Books" }
             };
 
             foreach (var category in categories)

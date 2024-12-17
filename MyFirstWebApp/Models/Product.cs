@@ -14,6 +14,6 @@ namespace MyFirstApp.Models
         [Precision(18, 2)]
         public decimal Price { get; set; }
         public int? CategoryId { get; set; }
-        public ProductCategory? Category { get; set; }
+        public Category? Category { get; set; }
     }
 }

@@ -114,13 +114,19 @@ public class ProductsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
-        if (id == null) return NotFound();
+        // Проверка на null-значение ID
+        if (!id.HasValue)
+            return NotFound("Идентификатор продукта отсутствует.");
 
+        // Получение продукта
         var product = await _productService.GetProductByIdAsync(id.Value);
-        if (product == null) return NotFound();
+        if (product == null)
+            return NotFound();
 
+        // Передача продукта в представление для подтверждения удаления
         return View(product);
     }
+
 
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]

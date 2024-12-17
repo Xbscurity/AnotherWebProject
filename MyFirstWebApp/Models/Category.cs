@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyFirstWebApp.Models
 {
-    public class ProductCategory
+    public class Category
     {
         public int Id { get; set; } // Первичный ключ
         public string Name { get; set; } = string.Empty;

@@ -12,12 +12,12 @@ namespace MyFirstWebApp.Data
         {
         }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Category> ProductCategories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка связи Product → ProductCategory
+            // Настройка связи Product → Category
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category) // Один продукт имеет одну категорию
                 .WithMany(c => c.Products) // Одна категория имеет много продуктов

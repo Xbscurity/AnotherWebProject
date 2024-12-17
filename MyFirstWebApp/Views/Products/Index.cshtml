@@ -30,9 +30,12 @@
     </form>
 
     <!-- Кнопка добавления нового продукта -->
-    <div class="d-flex justify-content-end mb-3">
-        <a asp-action="Create" class="btn btn-success">+ Add New Product</a>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="d-flex justify-content-end mb-3">
+            <a asp-action="Create" class="btn btn-success">+ Add New Product</a>
+        </div>
+    }
 
     <!-- Таблица продуктов -->
     <div class="table-responsive">
@@ -40,6 +43,7 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Name</th>
+                    <th scope="col">Category</th>
                     <th scope="col">Price</th>
                     <th scope="col" class="text-center">Actions</th>
                 </tr>
@@ -48,7 +52,7 @@
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="3" class="text-center">No products found.</td>
+                        <td colspan="4" class="text-center">No products found.</td>
                     </tr>
                 }
                 else
@@ -57,6 +61,7 @@
                     {
                         <tr>
                             <td>@product.Name</td>
+                            <td>@(product.Category?.Name ?? "Uncategorized")</td>
                             <td>$@product.Price.ToString("F2")</td>
                             <td class="text-center">
                                 <!-- Кнопка Details -->
@@ -71,9 +76,7 @@
                                 <!-- Кнопка Delete -->
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <form asp-action="Delete" asp-route-id="@product.Id" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                    </form>
+                                    <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
                                 }
                             </td>
                         </tr>

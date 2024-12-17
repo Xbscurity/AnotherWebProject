@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyFirstWebApp.Data;
 using MyFirstWebApp.Seeds;
+using MyFirstWebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

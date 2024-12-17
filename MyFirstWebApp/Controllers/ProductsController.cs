@@ -1,189 +1,133 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using MyFirstApp.Models;
-using MyFirstWebApp.Data;
+using MyFirstWebApp.Models;
+using MyFirstWebApp.Services;
 
-namespace MyFirstWebApp.Controllers
+public class ProductsController : Controller
 {
-    public class ProductsController : Controller
+    private readonly IProductService _productService;
+
+    public ProductsController(IProductService productService)
     {
-        private readonly ApplicationDbContext _context;
+        _productService = productService;
+    }
 
-        public ProductsController(ApplicationDbContext context)
+    public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice)
+    {
+        var products = await _productService.GetFilteredProducts(searchString, minPrice, maxPrice);
+        return View(products);
+    }
+
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var product = await _productService.GetProductByIdAsync(id.Value);
+        if (product == null) return NotFound();
+
+        return View(product);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create()
+    {
+        // Получаем список категорий через сервис
+        var viewModel = new ProductViewModel
         {
-            _context = context;
-        }
+            Categories = await _productService.GetCategoriesAsync() // Получаем категории
+        };
+        return View(viewModel);
+    }
 
-        // GET: Products
-        public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice)
+
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Create(ProductViewModel viewModel)
+    {
+        if (ModelState.IsValid)
         {
-            var products = _context.Products.AsQueryable(); // Начинаем с полного набора продуктов
-
-            // Фильтрация по названию, если задано
-            if (!string.IsNullOrEmpty(searchString))
+            var product = new Product
             {
-                products = products.Where(p => p.Name.Contains(searchString));
-            }
+                Name = viewModel.Name,
+                Price = viewModel.Price,
+                CategoryId = viewModel.CategoryId
+            };
 
-            // Фильтрация по минимальной цене, если задано
-            if (minPrice.HasValue)
-            {
-                products = products.Where(p => p.Price >= minPrice.Value);
-            }
-
-            // Фильтрация по максимальной цене, если задано
-            if (maxPrice.HasValue)
-            {
-                products = products.Where(p => p.Price <= maxPrice.Value);
-            }
-
-            // Получаем отфильтрованные продукты
-            var result = await products.ToListAsync();
-
-            // Передаем в представление отфильтрованные продукты
-            return View(result);
-        }
-
-
-        // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
-        // GET: Products/Create
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Price")] Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
-
-        // GET: Products/Edit/5
-        //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Price")] Product product)
-        {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
-
-        // GET: Products/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
-        // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-            }
-
-            await _context.SaveChangesAsync();
+            await _productService.CreateProductAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        viewModel.Categories = await _productService.GetCategoriesAsync();
+        return View(viewModel);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var product = await _productService.GetProductByIdAsync(id.Value);
+        if (product == null) return NotFound();
+
+        var viewModel = new ProductViewModel
         {
-            return _context.Products.Any(e => e.Id == id);
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            CategoryId = product.CategoryId,
+            Categories = await _productService.GetCategoriesAsync()
+        };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Edit(int id, ProductViewModel viewModel)
+    {
+        if (id != viewModel.Id) return NotFound();
+
+        if (ModelState.IsValid)
+        {
+            var product = new Product
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                Price = viewModel.Price,
+                CategoryId = viewModel.CategoryId
+            };
+
+            await _productService.UpdateProductAsync(product);
+            return RedirectToAction(nameof(Index));
         }
+
+        viewModel.Categories = await _productService.GetCategoriesAsync();
+        return View(viewModel);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var product = await _productService.GetProductByIdAsync(id.Value);
+        if (product == null) return NotFound();
+
+        return View(product);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _productService.DeleteProductAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

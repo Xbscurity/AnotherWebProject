@@ -12,14 +12,12 @@
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <!-- Name Field -->
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label">Product Name</label>
                     <input asp-for="Name" class="form-control" placeholder="Enter product name" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
-                <!-- Price Field -->
                 <div class="mb-3">
                     <label asp-for="Price" class="form-label">Price</label>
                     <div class="input-group">
@@ -30,7 +28,6 @@
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
 
-                <!-- Category Field -->
                 <div class="mb-3">
                     <label asp-for="CategoryId" class="form-label">Category</label>
                     <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
@@ -39,7 +36,6 @@
                     <span asp-validation-for="CategoryId" class="text-danger"></span>
                 </div>
 
-                <!-- Submit and Cancel Buttons -->
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-success">Create</button>
                     <a asp-action="Index" class="btn btn-secondary">Back to List</a>

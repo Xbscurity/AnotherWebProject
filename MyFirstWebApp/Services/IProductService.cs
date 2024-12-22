@@ -5,7 +5,7 @@ namespace MyFirstWebApp.Services
 {
     public interface IProductService
     {
-        Task<IEnumerable<Product>> GetFilteredProducts(string searchString, decimal? minPrice, decimal? maxPrice);
+        Task<IEnumerable<Product>> GetFilteredProducts(string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId);
         Task<Product?> GetProductByIdAsync(int id);
         Task<IEnumerable<SelectListItem>> GetCategoriesAsync();
         Task CreateProductAsync(Product product);

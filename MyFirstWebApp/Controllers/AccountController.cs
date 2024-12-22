@@ -38,23 +38,20 @@ namespace MyFirstWebApp.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Если результат неудачен, выводим ошибки в консоль
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
-                    Console.WriteLine($"Error: {error.Description}"); // Выводим ошибки в консоль
+                    Console.WriteLine($"Error: {error.Description}");
                 }
             }
             else
             {
-                // Если ModelState невалиден, выводим все ошибки
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
-                    Console.WriteLine($"ModelState Error: {error.ErrorMessage}"); // Выводим ошибки в консоль
+                    Console.WriteLine($"ModelState Error: {error.ErrorMessage}"); 
                 }
             }
 
-            // Возвращаем модель с ошибками
             return View(model);
         }
 

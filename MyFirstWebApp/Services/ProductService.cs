@@ -14,7 +14,7 @@ namespace MyFirstWebApp.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetFilteredProducts(string searchString, decimal? minPrice, decimal? maxPrice)
+        public async Task<IEnumerable<Product>> GetFilteredProducts(string searchString, decimal? minPrice, decimal? maxPrice, int? categoryId)
         {
             var query = _context.Products.Include(p => p.Category).AsQueryable();
 
@@ -27,6 +27,8 @@ namespace MyFirstWebApp.Services
             if (maxPrice.HasValue)
                 query = query.Where(p => p.Price <= maxPrice.Value);
 
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryId == categoryId.Value);
             return await query.ToListAsync();
         }
 
@@ -46,6 +48,7 @@ namespace MyFirstWebApp.Services
 
         public async Task CreateProductAsync(Product product)
         {
+            product.CreatedAt = DateTime.UtcNow;
             _context.Add(product);
             await _context.SaveChangesAsync();
         }

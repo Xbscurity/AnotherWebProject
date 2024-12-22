@@ -1,28 +1,40 @@
-﻿@model IEnumerable<MyFirstApp.Models.Product>
+﻿@model MyFirstWebApp.Models.ProductFilterViewModel
 
 @{
     ViewData["Title"] = "Products";
 }
 
-<div class="container py-4">
+<div class="container py-5">
     <h1 class="mb-4 text-center">Products</h1>
 
     <!-- Форма фильтрации -->
     <form method="get" class="row g-3 mb-4">
+        <input type="hidden" name="sortOrder" value="@Context.Request.Query["sortOrder"]" />
         <div class="col-md-4">
-            <label for="searchString" class="form-label">Search</label>
-            <input type="text" name="searchString" id="searchString" class="form-control"
-                   placeholder="Enter product name" value="@Context.Request.Query["searchString"]" />
+            <label asp-for="SearchString" class="form-label">Search</label>
+            <input asp-for="SearchString" class="form-control" placeholder="Enter product name" />
         </div>
         <div class="col-md-3">
-            <label for="minPrice" class="form-label">Min Price</label>
-            <input type="number" name="minPrice" id="minPrice" class="form-control"
-                   placeholder="0" value="@Context.Request.Query["minPrice"]" />
+            <label asp-for="MinPrice" class="form-label">Min Price</label>
+            <input asp-for="MinPrice" class="form-control" placeholder="0" type="number" />
         </div>
         <div class="col-md-3">
-            <label for="maxPrice" class="form-label">Max Price</label>
-            <input type="number" name="maxPrice" id="maxPrice" class="form-control"
-                   placeholder="1000" value="@Context.Request.Query["maxPrice"]" />
+            <label asp-for="MaxPrice" class="form-label">Max Price</label>
+            <input asp-for="MaxPrice" class="form-control" placeholder="1000" type="number" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="SelectedCategoryId" class="form-label">Category</label>
+            <select asp-for="SelectedCategoryId" class="form-select" asp-items="Model.Categories">
+                <option value="">All Categories</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="StartDate" class="form-label">Start Date</label>
+            <input asp-for="StartDate" class="form-control" type="date" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="EndDate" class="form-label">End Date</label>
+            <input asp-for="EndDate" class="form-control" type="date" />
         </div>
         <div class="col-md-2 align-self-end">
             <button type="submit" class="btn btn-primary w-100">Filter</button>
@@ -42,14 +54,24 @@
         <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">
+                        <a asp-action="Index" asp-route-sortOrder="@(Context.Request.Query["sortOrder"] == "name" ? "name_desc" : "name")"
+                           class="text-light">
+                            Product Name @(Context.Request.Query["sortOrder"] == "name" ? "↓" : "↑")
+                        </a>
+                    </th>
                     <th scope="col">Category</th>
-                    <th scope="col">Price</th>
+                    <th scope="col">
+                        <a asp-action="Index" asp-route-sortOrder="@(Context.Request.Query["sortOrder"] == "price" ? "price_desc" : "price")"
+                           class="text-light">
+                            Price @(Context.Request.Query["sortOrder"] == "price" ? "↓" : "↑")
+                        </a>
+                    </th>
                     <th scope="col" class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @if (!Model.Any())
+                @if (!Model.Products.Any())
                 {
                     <tr>
                         <td colspan="4" class="text-center">No products found.</td>
@@ -57,7 +79,7 @@
                 }
                 else
                 {
-                    @foreach (var product in Model)
+                    @foreach (var product in Model.Products)
                     {
                         <tr>
                             <td>@product.Name</td>

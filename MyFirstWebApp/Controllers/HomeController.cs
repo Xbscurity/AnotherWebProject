@@ -14,7 +14,7 @@ namespace MyFirstApp.Controllers
                 new Product { Id = 3, Name = "Cherry", Price = 2.00m }
             };
 
-            return View(products);  // Передаем список продуктов в представление
+            return View(products);  
         }
     }
 }

@@ -35,7 +35,6 @@ namespace MyFirstWebApp.Services
             if (id == null) return null;
             return await _context.ProductCategories.FirstOrDefaultAsync(c => c.Id == id);
         }
-
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             return await _context.ProductCategories.ToListAsync();
@@ -53,6 +52,10 @@ namespace MyFirstWebApp.Services
             {
                 throw new KeyNotFoundException($"Category with ID {id} not found.");
             }
+        }
+        public async Task<bool> IsCategoryExistsAsync(string name)
+        {
+            return await _context.ProductCategories.AnyAsync(c => c.Name == name);
         }
     }
 }

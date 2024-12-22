@@ -17,12 +17,14 @@ namespace MyFirstWebApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Настройка связи Product → Category
             modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category) // Один продукт имеет одну категорию
-                .WithMany(c => c.Products) // Одна категория имеет много продуктов
-                .HasForeignKey(p => p.CategoryId) // Внешний ключ
-                .OnDelete(DeleteBehavior.Cascade); // Удаление каскадное
+                .HasOne(p => p.Category) 
+                .WithMany(c => c.Products) 
+                .HasForeignKey(p => p.CategoryId) 
+                .OnDelete(DeleteBehavior.Cascade); 
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
         }
     }
 }

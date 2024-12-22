@@ -11,11 +11,10 @@ namespace MyFirstWebApp.Seeds
     {
         public static async Task SeedRolesAndUsers(IServiceProvider serviceProvider)
         {
-            // Получаем RoleManager и UserManager через сервисы
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-            // Проверяем и создаем роли, если их нет
+
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
@@ -25,7 +24,7 @@ namespace MyFirstWebApp.Seeds
                 await roleManager.CreateAsync(new IdentityRole("User"));
             }
 
-            // Создаем администратора, если его ещё нет
+
             var adminEmail = "admin@example.com";
             var adminPassword = "Admin@123";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
@@ -34,13 +33,13 @@ namespace MyFirstWebApp.Seeds
                 {
                     UserName = adminEmail,
                     Email = adminEmail,
-                    EmailConfirmed = true // Подтверждение почты сразу
+                    EmailConfirmed = true 
                 };
 
                 var result = await userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
-                    // Добавляем пользователя в роль Admin
+
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
                 else
@@ -51,13 +50,12 @@ namespace MyFirstWebApp.Seeds
         }
         public static void InitializeProductCategory(ApplicationDbContext context)
         {
-            // Если уже есть данные, не делаем вставку
+
             if (context.ProductCategories.Any())
             {
-                return;   // База данных уже содержит категории
+                return;   
             }
 
-            // Создание нескольких категорий
             var categories = new Category[]
             {
             new Category { Name = "Electronics" },
@@ -71,7 +69,7 @@ namespace MyFirstWebApp.Seeds
                 context.ProductCategories.Add(category);
             }
 
-            context.SaveChanges(); // Сохраняем изменения в базу данных
+            context.SaveChanges(); 
         }
     }
 }

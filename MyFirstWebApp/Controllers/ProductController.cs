@@ -1,24 +1,59 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using MyFirstApp.Models;
 using MyFirstWebApp.Models;
 using MyFirstWebApp.Services;
 
-public class ProductsController : Controller
+public class ProductController : Controller
 {
     private readonly IProductService _productService;
 
-    public ProductsController(IProductService productService)
+    public ProductController(IProductService productService)
     {
         _productService = productService;
     }
 
-    public async Task<IActionResult> Index(string searchString, decimal? minPrice, decimal? maxPrice)
+    public async Task<IActionResult> Index(ProductFilterViewModel filter, string sortOrder)
     {
-        var products = await _productService.GetFilteredProducts(searchString, minPrice, maxPrice);
-        return View(products);
+        // Получение продуктов на основе фильтра
+        var products = await _productService.GetFilteredProducts(
+            filter.SearchString,
+            filter.MinPrice,
+            filter.MaxPrice,
+            filter.SelectedCategoryId
+        );
+        if (filter.StartDate.HasValue)
+        {
+            products = products.Where(p => p.CreatedAt >= filter.StartDate.Value);
+        }
+        if (filter.EndDate.HasValue)
+        {
+            products = products.Where(p => p.CreatedAt <= filter.EndDate.Value);
+        }
+        // Применение сортировки
+        products = sortOrder switch
+        {
+            "name_desc" => products.OrderByDescending(p => p.Name),
+            "price" => products.OrderBy(p => p.Price),
+            "price_desc" => products.OrderByDescending(p => p.Price),
+            "createdat" => products.OrderBy(p => p.CreatedAt),
+            "createdat_desc" => products.OrderByDescending(p => p.CreatedAt),
+            _ => products.OrderBy(p => p.Name)
+        };
+
+        // Получение списка категорий для выпадающего списка
+        filter.Categories = await _productService.GetCategoriesAsync();
+
+        // Присваиваем отфильтрованные продукты
+        filter.Products = products;
+
+        return View(filter);
     }
+
+
 
     public async Task<IActionResult> Details(int? id)
     {
@@ -33,10 +68,9 @@ public class ProductsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create()
     {
-        // Получаем список категорий через сервис
         var viewModel = new ProductViewModel
         {
-            Categories = await _productService.GetCategoriesAsync() // Получаем категории
+            Categories = await _productService.GetCategoriesAsync() 
         };
         return View(viewModel);
     }
@@ -114,16 +148,12 @@ public class ProductsController : Controller
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(int? id)
     {
-        // Проверка на null-значение ID
         if (!id.HasValue)
             return NotFound("Идентификатор продукта отсутствует.");
 
-        // Получение продукта
         var product = await _productService.GetProductByIdAsync(id.Value);
         if (product == null)
             return NotFound();
-
-        // Передача продукта в представление для подтверждения удаления
         return View(product);
     }
 

@@ -6,7 +6,6 @@ using MyFirstWebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -15,11 +14,11 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
-    options.Password.RequireDigit = false; // Отключаем требование цифры
-    options.Password.RequireLowercase = false; // Отключаем требование для нижнего регистра
-    options.Password.RequireUppercase = false; // Отключаем требование для верхнего регистра
-    options.Password.RequireNonAlphanumeric = false; // Отключаем требование для неалфавитных символов
-    options.Password.RequiredLength = 6; // Минимальная длина пароля
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false; 
+    options.Password.RequireUppercase = false; 
+    options.Password.RequireNonAlphanumeric = false; 
+    options.Password.RequiredLength = 6; 
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
@@ -34,7 +33,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
-    ApplicationDbInitializer.InitializeProductCategory(context); // Инициализация категорий
+    ApplicationDbInitializer.InitializeProductCategory(context); 
 }
 
 // Configure the HTTP request pipeline.

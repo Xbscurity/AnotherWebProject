@@ -10,6 +10,7 @@ namespace MyFirstWebApp.Services
         Task UpdateCategoryAsync(Category category);
 
         Task<Category?> GetCategoryByIdAsync(int? id);
+        Task<bool> IsCategoryExistsAsync(string name);
 
          Task<List<Category>> GetAllCategoriesAsync();
 

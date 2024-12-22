@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Categories";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Укажите свой макет, если нужно
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -18,13 +18,13 @@
         align-items: center;
         margin-bottom: 20px;
         padding-bottom: 10px;
-        border-bottom: 2px solid #ddd; /* Добавляем разделительную линию */
+        border-bottom: 2px solid #ddd;
     }
 
-        .header h1 {
-            font-size: 2rem;
-            color: #333;
-        }
+    .header h1 {
+        font-size: 2rem;
+        color: #333;
+    }
 
     .add-btn {
         background-color: #007bff;
@@ -36,13 +36,8 @@
         font-weight: bold;
     }
 
-        .add-btn:hover {
-            background-color: #0056b3;
-            color: white;
-        }
-
-    .list-container {
-        margin-top: 20px;
+    .add-btn:hover {
+        background-color: #0056b3;
     }
 
     .card-grid {
@@ -60,16 +55,16 @@
         transition: transform 0.2s, box-shadow 0.2s;
     }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-        }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
 
-        .card h2 {
-            font-size: 1.5rem;
-            color: #555;
-            margin-bottom: 10px;
-        }
+    .card h2 {
+        font-size: 1.5rem;
+        color: #555;
+        margin-bottom: 10px;
+    }
 
     .card-actions {
         margin-top: 10px;
@@ -89,23 +84,23 @@
         transition: background-color 0.3s, box-shadow 0.2s;
     }
 
-        .action-btn.edit {
-            background-color: #28a745;
-            color: white;
-        }
+    .action-btn.edit {
+        background-color: #28a745;
+        color: white;
+    }
 
-            .action-btn.edit:hover {
-                background-color: #218838;
-            }
+    .action-btn.edit:hover {
+        background-color: #218838;
+    }
 
-        .action-btn.delete {
-            background-color: #dc3545;
-            color: white;
-        }
+    .action-btn.delete {
+        background-color: #dc3545;
+        color: white;
+    }
 
-            .action-btn.delete:hover {
-                background-color: #c82333;
-            }
+    .action-btn.delete:hover {
+        background-color: #c82333;
+    }
 
     .empty-state {
         text-align: center;
@@ -116,13 +111,14 @@
 </style>
 
 <div class="container">
-    <!-- Заголовок и кнопка -->
     <div class="header">
         <h1>Categories</h1>
-        <a href="/Category/Create" class="add-btn">Add Category</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="add-btn">Add Category</a>
+        }
     </div>
 
-    <!-- Список категорий -->
     <div class="list-container">
         @if (!Model.Any())
         {
@@ -138,12 +134,11 @@
                     <div class="card">
                         <h2>@category.Name</h2>
                         <div class="card-actions">
-                            <a href="/Category/Edit/@category.Id" class="action-btn edit">
-                                Edit
-                            </a>
-                            <a href="/Category/Delete/@category.Id" class="action-btn delete">
-                                Delete
-                            </a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@category.Id" class="action-btn edit">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@category.Id" class="action-btn delete">Delete</a>
+                            }
                         </div>
                     </div>
                 }

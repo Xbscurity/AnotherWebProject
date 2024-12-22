@@ -13,6 +13,7 @@ namespace MyFirstApp.Models
         public string Name { get; set; }
         [Precision(18, 2)]
         public decimal Price { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
     }
